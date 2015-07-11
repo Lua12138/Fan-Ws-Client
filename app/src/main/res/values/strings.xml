@@ -1,12 +1,11 @@
 <resources>
-    <string name="app_name">Application of forDream</string>
+    <string name="app_name">forDream</string>
     <string name="action_settings">Settings</string>
-    <string name="input_orderid">请输入订单号：</string>
-    <string name="input_okay">确认订单</string>
-    <string name="input_cancle">取消</string>
-    <string name="lbl1">选择原因：</string>
-    <string name="lbl2">输入备注：</string>
-    <string name="btn3">确认提交订单到货异常确认</string>
+    <string name="exception_land_activity_label_reason">选择原因：</string>
+    <string name="exception_land_activity_label_memo">输入备注：</string>
+    <string name="exception_land_activity_btn_commit">确认提交订单到货异常确认</string>
+
+    <string name="util_okay">确定</string>
 
     <string name="main_tips_tv_select_order_id">查询单号:</string>
     <string name="main_tips_btn_select_order_id">查询订单信息</string>
@@ -14,6 +13,9 @@
     <string name="main_tips_btn_get_order_top10">获得前10订单信息</string>
 
     <string name="toast_check_order_id">输入的订单号不正确，请确认后重试</string>
+    <string name="toast_custom_order">该订单不存在，可能已经确认收货。但是可以在列表中长按，修改订单状态</string>
+    <string name="toast_no_exception_list">获得异常类型失败，请检查网络后，重启应用再次尝试</string>
+    <string name="toast_working_please">正在操作中，请稍候...</string>
 
     <string name="lvTvTips1">订单号:</string>
     <string name="lvTvTips2">客户名称:</string>
@@ -33,15 +35,4 @@
     <string name="lvTvTips9">到货异常备注信息:</string>
     <string name="lvTvTips10">提交信息时间:</string>
 
-    <string-array name="main_act_op">
-        <item>获取订单信息 - OrderInf</item>
-        <item>前10订单信息 - OrderTop10</item>
-        <item>查询订单状态 - OrderState</item>
-
-        <item>*订单到货流水查询 - OrderLandOpt </item>
-        <item>*订单到货确认上传 - OrderLand</item>
-        <item>*取消订单到货确认 - OrderLandCancel</item>
-        <item>*订单到货异常确认 - OrderLandExp</item>
-        <item>*订单异常状态字典 - OrderExpState </item>
-    </string-array>
 </resources>

@@ -33,6 +33,7 @@ import java.util.Random;
 import fordream.fan.R;
 import fordream.fan.service.WsRequestExtra;
 import fordream.fan.service.WsService;
+import fordream.fan.util.LogHelper;
 import fordream.fan.util.ServiceHelper;
 import fordream.fan.ws.bean.TData;
 import fordream.fan.ws.bean.TExceptionType;
@@ -71,7 +72,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        Log.d(this.getClass().getName(), "init-onCreate");
+
+        setContentView(R.layout.activity_main);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(ServiceBrodcastReceiver.class.getName()); //过滤器
@@ -81,9 +84,24 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.btnSelectByOrderId).setOnClickListener(new SelectByOrderIdListener(this));
         findViewById(R.id.btnSelectByOrderTop10).setOnClickListener(new SelectByOrderTop10Listener(this));
+        //设置日志输入按钮
+        findViewById(R.id.btnOutputLog).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LogHelper.outputLog(MainActivity.this))
+                    miniToast("日志保存在SD卡根目录下debug-forDream.log文件中");
+                else
+                    miniToast("输出失败");
+            }
+        });
 
     }
 
+    /**
+     * 简单的显示一条消息
+     *
+     * @param content
+     */
     protected void miniToast(String content) {
         Toast.makeText(this, content, Toast.LENGTH_LONG).show();
     }
@@ -97,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         String orderId = (String) ((HashMap) ((ListView) this.findViewById(R.id.clientArea).findViewById(this.listviewId)).getItemAtPosition(menuInfo.position)).get("lvTvOrderId");
 
-        Log.d(this.getClass().getName(), "OrderId:" + orderId);
+        Log.d(this.getClass().getName(), "上下文选择单号:" + orderId);
 
         WsRequestExtra requestExtra = new WsRequestExtra();
         requestExtra.setOrderId(orderId);
@@ -122,21 +140,20 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() != 2) {
             ServiceHelper.toService(this, requestExtra);
             //保留原界面信息
-            miniToast("正在操作中，请稍候...");
+            miniToast(getResources().getString(R.string.toast_working_please));
         } else {
             //显示异常类型供选择
             LinearLayout layout = (LinearLayout) findViewById(R.id.clientArea);
             layout.removeAllViews();
-            View view = getLayoutInflater().inflate(R.layout.activity_order_exp_land, null);//异常输入布局文件
+            View view = getLayoutInflater().inflate(R.layout.activity_subview_order_exp_land, null);//异常输入布局文件
             ((TextView) view.findViewById(R.id.expTvOrderId)).setText(orderId);
             Spinner spinner = (Spinner) view.findViewById(R.id.expCbbReason);
 
             if (WsService.getExceptionListCount() < 0) {
-                miniToast("获得异常类型失败，请检查网络后，重启应用再次尝试");
+                miniToast(getResources().getString(R.string.toast_no_exception_list));
                 return false;
             }
             ArrayAdapter<TExceptionType> adapter = new ArrayAdapter<TExceptionType>(this, android.R.layout.simple_spinner_item);
-            TExceptionType[] exceptionTypes = new TExceptionType[WsService.getExceptionListCount()];
 
             //异常类型添加到列表
             for (int i = 0; i < WsService.getExceptionListCount(); i++)
@@ -191,8 +208,11 @@ public class MainActivity extends AppCompatActivity {
 
             LinearLayout layout = (LinearLayout) findViewById(R.id.clientArea);
 
-            if (intent.getExtras() == null)
+            if (intent.getExtras() == null) {
+                Log.w(this.getClass().getName(), "广播接收空参数");
+                Log.w(this.getClass().getName(), intent.toString());
                 return;
+            }
 
             int opType = intent.getExtras().getInt("opType", -1);
             List<Map<String, Object>> lst;
@@ -204,10 +224,13 @@ public class MainActivity extends AppCompatActivity {
             //判断数据类型
             TStandResponse response = ServiceHelper.activityReceiveExtras(intent, WsService.getWsResultType(opType));
 
+            Log.i(this.getClass().getName(), "广播接收参数-操作类型:" + opType);
+
             switch (opType) {
                 case WsRequestExtra.OP_TYPE_OrderInf:
                     if (!response.isResult()) {
-                        miniToast("该订单不存在，可能已经确认收货。但是可以在列表中长按，修改订单状态");
+
+                        miniToast(getResources().getString(R.string.toast_custom_order));
                         //添加一个虚拟记录供显示
                         response.setResult(true);
                         TData data = new TData(null);
@@ -228,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
                     lst = new ArrayList<Map<String, Object>>();
 
                     if (!response.isResult()) {
-                        miniToast("获取失败");
                         miniToast(response.getResultMessage());
                         return;
                     }
@@ -237,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
                         ids = new int[]{R.id.lvTvOrderId, R.id.lvTvState, R.id.lvTvCreateTime, R.id.lvTvMemo, R.id.lvTvReason};
                         from = new String[]{"lvTvOrderId", "lvTvState", "lvTvCreateTime", "lvTvMemo", "lvTvReason"};
                         TOrderLandOpt result = (TOrderLandOpt) response;
-                        adapter = new ListViewAdapter(MainActivity.this, lst, R.layout.activity_listview2, from, ids);
+                        adapter = new ListViewAdapter(MainActivity.this, lst, R.layout.activity_listview_order_exception_info, from, ids);
                         for (int i = 0; i < result.getLandChks().getItemCount(); i++) {
                             Map map = new HashMap();
                             map.put(from[0], result.getLandChks().getItem(i).getOrderid());
@@ -252,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
                         from = new String[]{"lvTvAddress", "lvTvAddressId", "lvTvClientName", "lvTvCreateTime", "lvTvOrderId", "lvTvQuality"};
 
                         TResultOrder result = (TResultOrder) response;
-                        adapter = new ListViewAdapter(MainActivity.this, lst, R.layout.activity_listview, from, ids);
+                        adapter = new ListViewAdapter(MainActivity.this, lst, R.layout.activity_listview_order_info, from, ids);
                         ListViewListener listener = new fordream.fan.activity.main.ListViewListener();
 
                         lv.setOnItemClickListener(listener); //按键监听
@@ -278,12 +300,12 @@ public class MainActivity extends AppCompatActivity {
                             resultState.isResult() ?
                                     "Successfully:" + resultState.getState() :
                                     "Error:" + resultState.getResultMessage())
-                            .setPositiveButton("确定", null).show();
+                            .setPositiveButton(getResources().getString(R.string.util_okay), null).show();
                     break;
                 case WsRequestExtra.OP_TYPE_OrderLand:
                 case WsRequestExtra.OP_TYPE_OrderLandCancel:
                 case WsRequestExtra.OP_TYPE_OrderLandExp:
-                    new AlertDialog.Builder(MainActivity.this).setMessage(response.getResultMessage()).setPositiveButton("确定", null).show();
+                    new AlertDialog.Builder(MainActivity.this).setMessage(response.getResultMessage()).setPositiveButton(getResources().getString(R.string.util_okay), null).show();
                     break;
                 case WsRequestExtra.OP_TYPE_OrderExpState:
                     break;

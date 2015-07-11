@@ -33,7 +33,9 @@ public class ListViewAdapter extends SimpleAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        //设置表格奇偶色
         int color1 = Color.argb(80, 219, 229, 241);
+        int color2 = Color.WHITE;
         View view = super.getView(position, convertView, parent);
         if (position % 2 == 0)
             view.setBackgroundColor(color1);
