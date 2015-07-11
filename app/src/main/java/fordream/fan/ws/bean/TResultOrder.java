@@ -1,10 +1,8 @@
 package fordream.fan.ws.bean;
 
-import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 
 import java.io.Serializable;
-import java.util.Hashtable;
 
 /**
  * Created by forDream on 2015-07-07.
@@ -23,6 +21,10 @@ public class TResultOrder extends TStandResponse implements Serializable {
             soapObject = (SoapObject) soapObject.getProperty(FIELD_DATA);
         if (soapObject.hasProperty(FIELD_DATAS))
             this.data = new TList<TData>(soapObject.getProperty(FIELD_DATAS), TData.class);
+    }
+
+    public void setData(TList<TData> data) {
+        this.data = data;
     }
 
     public TList<TData> getData() {

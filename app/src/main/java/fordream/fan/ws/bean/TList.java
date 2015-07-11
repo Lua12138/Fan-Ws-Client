@@ -14,6 +14,8 @@ public class TList<T> extends BeanBased implements Serializable {
     private List list;
 
     public TList(Object objParam, Class targetClass) {
+        this.list = new ArrayList();
+
         if (objParam == null) return;
         SoapObject soapObject = null;
 
@@ -22,7 +24,6 @@ public class TList<T> extends BeanBased implements Serializable {
 
         if (soapObject == null) return;
 
-        this.list = new ArrayList();
         try {
             for (int i = 0; i < soapObject.getPropertyCount(); i++) {
                 /*构造复合对象*/
@@ -32,6 +33,10 @@ public class TList<T> extends BeanBased implements Serializable {
             //Log.e(this.getClass().getPackage().getName(), e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void addItem(T item) {
+        this.list.add(item);
     }
 
     public int getItemCount() {

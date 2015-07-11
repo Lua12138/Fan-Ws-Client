@@ -26,7 +26,8 @@ public class TData extends BeanBased implements Serializable {
         this.client_name = (String) this.getField(objParam, FIELD_CLIENT_NAME, String.class);
         this.add_id = (String) this.getField(objParam, FIELD_ADD_ID, String.class);
         this.add_name = (String) this.getField(objParam, FIELD_ADD_NAME, String.class);
-        this.quality = (float) this.getField(objParam, FIELD_QUALITY, Float.class);
+        Object obj = this.getField(objParam, FIELD_QUALITY, Float.class); //防止空指针异常
+        this.quality = obj == null ? 0 : (float) obj;
         this.create_date_time = (Date) this.getField(objParam, FIELD_CREATE_DATE_TIME, Date.class);
     }
 
@@ -34,23 +35,47 @@ public class TData extends BeanBased implements Serializable {
         return orderid;
     }
 
+    public void setOrderid(String orderid) {
+        this.orderid = orderid;
+    }
+
     public String getClient_name() {
         return client_name;
+    }
+
+    public void setClient_name(String client_name) {
+        this.client_name = client_name;
     }
 
     public String getAdd_id() {
         return add_id;
     }
 
+    public void setAdd_id(String add_id) {
+        this.add_id = add_id;
+    }
+
     public String getAdd_name() {
         return add_name;
+    }
+
+    public void setAdd_name(String add_name) {
+        this.add_name = add_name;
     }
 
     public float getQuality() {
         return quality;
     }
 
+    public void setQuality(float quality) {
+        this.quality = quality;
+    }
+
     public Date getCreate_date_time() {
         return create_date_time;
+    }
+
+    public void setCreate_date_time(Date create_date_time) {
+        this.create_date_time = create_date_time;
     }
 }

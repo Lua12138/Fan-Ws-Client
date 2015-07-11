@@ -3,6 +3,7 @@ package fordream.fan.util;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.io.Serializable;
 
@@ -91,6 +92,7 @@ public class ServiceHelper {
      * @param to       目标Activity
      * @param response 附加数据
      */
+    @Deprecated
     public static void toActivity(Context from, Class to, Object response) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(response.getClass().getName(), (Serializable) response);
@@ -99,20 +101,22 @@ public class ServiceHelper {
     }
 
     /**
-     * Service反馈Activity方法
+     * Service反馈Activity方法<br>
+     * 现改用广播机制实现
      *
      * @param from   Service自身指针
-     * @param to     目标Activity
+     * @param to     目标Broardcast
      * @param bundle 附加数据
      */
     public static void toActivity(Context from, Class to, Bundle bundle) {
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.setClass(from, to);
+        Intent intent = new Intent(to.getName());
+        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //intent.setClass(from, to);
 
         intent.putExtras(bundle);
 
-        from.startActivity(intent);
+        Log.d(ServiceHelper.class.getName(), "toActivity:");
+        from.sendBroadcast(intent);
     }
 }

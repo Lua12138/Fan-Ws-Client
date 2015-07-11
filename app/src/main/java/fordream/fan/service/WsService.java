@@ -37,16 +37,16 @@ public class WsService extends IntentService {
         if (opTarget == null) {
             opTarget = new HashMap<Integer, Class>();
 
-            opTarget.put(WsRequestExtra.OP_TYPE_OrderInf, MainActivity.class);
-            opTarget.put(WsRequestExtra.OP_TYPE_OrderState, MainActivity.class);
+            opTarget.put(WsRequestExtra.OP_TYPE_OrderInf, MainActivity.ServiceBrodcastReceiver.class);
+            opTarget.put(WsRequestExtra.OP_TYPE_OrderState, MainActivity.ServiceBrodcastReceiver.class);
 
-            opTarget.put(WsRequestExtra.OP_TYPE_OrderTop10, MainActivity.class);
+            opTarget.put(WsRequestExtra.OP_TYPE_OrderTop10, MainActivity.ServiceBrodcastReceiver.class);
 
-            opTarget.put(WsRequestExtra.OP_TYPE_OrderLand, MainActivity.class);
-            opTarget.put(WsRequestExtra.OP_TYPE_OrderLandCancel, MainActivity.class);
-            opTarget.put(WsRequestExtra.OP_TYPE_OrderLandOpt, MainActivity.class);
+            opTarget.put(WsRequestExtra.OP_TYPE_OrderLand, MainActivity.ServiceBrodcastReceiver.class);
+            opTarget.put(WsRequestExtra.OP_TYPE_OrderLandCancel, MainActivity.ServiceBrodcastReceiver.class);
+            opTarget.put(WsRequestExtra.OP_TYPE_OrderLandOpt, MainActivity.ServiceBrodcastReceiver.class);
 
-            opTarget.put(WsRequestExtra.OP_TYPE_OrderLandExp, MainActivity.class);
+            opTarget.put(WsRequestExtra.OP_TYPE_OrderLandExp, MainActivity.ServiceBrodcastReceiver.class);
         }
         if (opResultTarget == null) {
             opResultTarget = new HashMap<Integer, Class>();

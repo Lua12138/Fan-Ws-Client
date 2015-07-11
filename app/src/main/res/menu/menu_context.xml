@@ -10,7 +10,6 @@
         <item
             android:id="@+id/menu_OrderLandExp"
             android:title="@string/listview_context_OrderLandExp" />
-
         <item
             android:id="@+id/menu_OrderLandOpt"
             android:title="@string/listview_context_OrderLandOpt" />

@@ -22,6 +22,15 @@ public class TStandResponse extends BeanBased implements Serializable {
         return result;
     }
 
+    /**
+     * 因程序逻辑需要，否则不应该使用该方法
+     *
+     * @param result
+     */
+    public void setResult(boolean result) {
+        this.result = result;
+    }
+
     public String getResultMessage() {
         return resultMessage;
     }
